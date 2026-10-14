@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "version": "1.0",
+  "name": "Traichu Theme",
+  "description": "Custom Traichu Theme for Brave",
+  "theme": {
+    "colors": {
+      "frame": [26, 27, 38],
+      "frame_inactive": [30, 31, 45],
+      "toolbar": [30, 31, 45],
+      "tab_text": [192, 202, 245],
+      "tab_background_text": [86, 95, 137],
+      "bookmark_text": [192, 202, 245],
+      "ntp_background": [26, 27, 38],
+      "ntp_text": [192, 202, 245],
+      "button_background": [30, 31, 45]
+    }
+  }
+}

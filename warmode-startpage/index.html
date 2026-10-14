@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="agni">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WarMode — A calm, distraction-free CyberSec & Developer startpage.">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <script src="js/main.js" defer></script>
+    <link rel="stylesheet" href="css/main.css">
+    <title>WarMode</title>
+</head>
+<body>
+    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+    <!-- Floating Action Buttons (Bottom Right) -->
+    <div class="fab-group zen-target">
+        <button id="reset-sites-btn" onclick="restoreDefaultSites()" title="Restore All Default Sites, Tools & Cheat-Sheets" style="display:none;">↺</button>
+        <button id="edit-mode-btn" onclick="toggleEditMode()" title="Toggle Edit Mode (⌥E)">✏️</button>
+    </div>
+
+    <main>
+        <header>
+            <section id="date-time">
+                <span id="prompt-user" class="prompt-user" onblur="saveHeroText()" spellcheck="false">root@offsec</span><span class="prompt-colon">:</span><span class="prompt-path">~</span><span class="prompt-hash">#</span><span class="prompt-cursor"></span>
+                <span id="clock-display" onclick="togglePomodoro()" title="Click to start/stop 25m Pomodoro (⌥P)">00:00:00</span>
+            </section>
+            <div id="day-progress" title="Share of today elapsed">
+                <div><b id="dp-bar"></b></div>
+                <span id="dp-txt"></span>
+            </div>
+            <section id="weather">
+                <span id="streak-badge" class="streak-tag" title="Daily Habit Streak">🔥 0d</span>
+                <span id="audio-status" class="audio-tag" onclick="cycleAudio()" title="Click or press ⌥A for Focus Soundscape (Brown Noise / Pink Rain / 40Hz Gamma)">🎧 Audio <kbd>⌥A</kbd></span>
+                <span id="sys-status" class="status-tag">[SYSTEM: ACTIVE]</span>
+            </section>
+        </header>
+
+        <section id="app">
+            <div id="hero">
+                <!-- Animated Cyber-Zen Reactor Mandala (Replaces Pokemon SVG) -->
+                <aside id="zen-aside" onclick="toggleBreathing()" title="Click for 60s Box Breathing Pacer (⌥B)">
+                    <svg class="cyber-zen-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+                        <!-- Outer Telemetry Ring -->
+                        <circle class="cz-ring-outer" cx="60" cy="60" r="54" stroke="var(--cyan)" stroke-width="1.5" stroke-opacity="0.35" stroke-dasharray="6 6" />
+                        <!-- Counter-Rotating Sacred Octagon Ring -->
+                        <circle class="cz-ring-mid" cx="60" cy="60" r="44" stroke="var(--accent)" stroke-width="1.8" stroke-opacity="0.55" stroke-dasharray="28 14" />
+                        <!-- Geometric Lotus / Hex Frame -->
+                        <polygon class="cz-poly" points="60,18 96,39 96,81 60,102 24,81 24,39" stroke="var(--amber)" stroke-width="1.5" stroke-opacity="0.45" fill=" rgba(255,255,255,0.015)" />
+                        <polygon class="cz-poly-inner" points="60,26 89,77 31,77" stroke="var(--cyan)" stroke-width="1.2" stroke-opacity="0.35" />
+                        <polygon class="cz-poly-inner" points="60,94 89,43 31,43" stroke="var(--accent)" stroke-width="1.2" stroke-opacity="0.35" />
+                        <!-- Inner Core Ring -->
+                        <circle class="cz-core-ring" cx="60" cy="60" r="18" stroke="var(--text)" stroke-width="1.5" stroke-opacity="0.7" />
+                        <!-- Glowing Center Singularity -->
+                        <circle class="cz-core-dot" cx="60" cy="60" r="7" fill="var(--accent)" />
+                        <!-- Cardinal Axis Ticks -->
+                        <line x1="60" y1="2" x2="60" y2="12" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" />
+                        <line x1="60" y1="108" x2="60" y2="118" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" />
+                        <line x1="2" y1="60" x2="12" y2="60" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" />
+                        <line x1="108" y1="60" x2="118" y2="60" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </aside>
+                <div class="hero-text">
+                    <h1 id="greeting" onblur="saveHeroText()" spellcheck="false">Welcome Intruder!</h1>
+                    <p id="subline">
+                        <span class="sk" id="subline-text" onblur="saveHeroText()" spellcheck="false">Hack the planet. Stay focused.</span>
+                    </p>
+                </div>
+            </div>
+
+            <div id="search-area">
+                <div id="focus-anchor" onclick="clearFocus()" title="Mission Accomplished? Click to clear"></div>
+                <div id="breathe-anchor" onclick="toggleBreathing()" title="Click to stop Box Breathing"></div>
+                
+                <section id="search">
+                    <form id="search-form" onsubmit="handleSearch(event)">
+                        <input type="text" id="q" placeholder="Search Google or type/click a tool below... (Press / or ⌘K to focus)" autofocus autocomplete="off">
+                        <button type="button" class="search-shortcut-hint" onclick="toggleShortcutsModal()" title="View All Shortcuts & Commands (⌥K)">⌨️ Keys <kbd>⌥K</kbd></button>
+                    </form>
+                </section>
+
+                <!-- Dynamic & Editable Instant Tools / Cheat-Sheets Bar -->
+                <div id="quick-cmd-bar" class="zen-target" aria-label="Instant Tools">
+                    <!-- JS dynamically renders customizable tool pills + '+ Tool / Cheat' button in Edit Mode -->
+                </div>
+
+                <!-- Live Omni-Suggestions & Command Output Overlay -->
+                <div id="omni-suggestions" role="listbox"></div>
+                <div id="cheat-overlay">
+                    <div class="overlay-bar">
+                        <span id="overlay-title">OUTPUT</span>
+                        <div class="overlay-actions">
+                            <button type="button" id="edit-cheat-btn" onclick="editCurrentCheatSheet()" style="display:none;" title="Edit this Cheat-Sheet">✏️ Edit</button>
+                            <button type="button" onclick="copyOverlayText()">📋 Copy</button>
+                            <button type="button" onclick="closeCheatOverlay()">Esc ×</button>
+                        </div>
+                    </div>
+                    <pre id="overlay-content"></pre>
+                </div>
+            </div>
+
+            <!-- Dynamic Editable Dock (Pre-loaded with Default Items + Gmail) -->
+            <div id="dock-wrap" class="zen-target">
+                <nav id="dock">
+                    <ul id="dock-list">
+                        <li class="dynamic-dock" style="--c: var(--violet)"><a href="https://github.com" title="GitHub"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" class="dock-icon" alt="GitHub"></a></li>
+                        <li class="dynamic-dock" style="--c: var(--amber)"><a href="https://leetcode.com" title="LeetCode"><img src="https://www.google.com/s2/favicons?domain=leetcode.com&sz=64" class="dock-icon" alt="LeetCode"></a></li>
+                        <li class="dynamic-dock" style="--c: var(--green)"><a href="https://www.hackerrank.com" title="HackerRank"><img src="https://www.google.com/s2/favicons?domain=www.hackerrank.com&sz=64" class="dock-icon" alt="HackerRank"></a></li>
+                        <li class="dynamic-dock" style="--c: var(--cyan)"><a href="https://chatgpt.com" title="ChatGPT"><img src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=64" class="dock-icon" alt="ChatGPT"></a></li>
+                        <li class="dynamic-dock" style="--c: var(--text)"><a href="https://notion.so" title="Notion"><img src="https://www.google.com/s2/favicons?domain=notion.so&sz=64" class="dock-icon" alt="Notion"></a></li>
+
+                        <!-- Fixed Gmail Menu Button at the end -->
+                        <li class="fixed-dock">
+                            <a href="#" id="gmail-btn" title="Root Mailboxes (⌥M)" onclick="toggleGmailMenu(event)">
+                                <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+                            </a>
+                        </li>
+                        <li><button class="add-dock-btn" onclick="openDockModal()" title="Add Dock App">+</button></li>
+                    </ul>
+                </nav>
+
+                <!-- Gmail Dropdown with Visible Scrollbar -->
+                <div id="gmail-menu" role="menu">
+                    <div class="gm-title">Root Access: Mailboxes</div>
+                    <div id="gmail-list">
+                        <a href="https://mail.google.com/mail/?authuser=piyush.sharma.sot26@pwioi.com" target="_blank"><span class="gm-badge" style="background: #00897b;">P</span><div class="gm-info"><span>Piyush Sharma(LKO)</span><small>piyush.sharma.sot26@pwioi.com</small></div></a>
+                        <a href="https://mail.google.com/mail/?authuser=sharmapiyush7333@gmail.com" target="_blank"><span class="gm-badge" style="background: #607D8B;">P</span><div class="gm-info"><span>Piyush Sharma</span><small>sharmapiyush7333@gmail.com</small></div></a>
+                        <a href="https://mail.google.com/mail/?authuser=piyush.offsec@gmail.com" target="_blank"><span class="gm-badge" style="background: #8e24aa;">P</span><div class="gm-info"><span>Piyush Sharma</span><small>piyush.offsec@gmail.com</small></div></a>
+                        <a href="https://mail.google.com/mail/?authuser=piyush.exams99@gmail.com" target="_blank"><span class="gm-badge" style="background: #43a047;">P</span><div class="gm-info"><span>Piyush Sharma</span><small>piyush.exams99@gmail.com</small></div></a>
+                        <a href="https://mail.google.com/mail/?authuser=piyush.pwju26@medhaviskillsuniversity.edu.in" target="_blank"><span class="gm-badge" style="background: #7e57c2;">P</span><div class="gm-info"><span>PIYUSH SHARMA</span><small>piyush.pwju26@medhaviskills...</small></div></a>
+                        <a href="https://mail.google.com/mail/?authuser=vikashs.venus@gmail.com" target="_blank"><span class="gm-badge" style="background: #e53935;">K</span><div class="gm-info"><span>khushi Sharma</span><small>vikashs.venus@gmail.com</small></div></a>
+                        <a href="https://mail.google.com/mail/?authuser=piyush1337.gdg56@gmail.com" target="_blank"><span class="gm-badge" style="background: #3949ab;">P</span><div class="gm-info"><span>Piyush Sharma</span><small>piyush1337.gdg56@gmail.com</small></div></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3-in-1 Power Panel: Tasks, Daily Habits, & Quick Snippets -->
+            <section id="notes-widget">
+                <div class="widget-header-bar">
+                    <div class="widget-tabs">
+                        <button type="button" class="w-tab active" data-tab="tasks" onclick="switchWidgetTab('tasks')">&gt; TODO <span id="todo-count"></span></button>
+                        <button type="button" class="w-tab" data-tab="habits" onclick="switchWidgetTab('habits')">&gt; HABITS</button>
+                        <button type="button" class="w-tab" data-tab="snippets" onclick="switchWidgetTab('snippets')">&gt; SNIPS</button>
+                    </div>
+                    <button type="button" id="clear-done-btn" class="subtle-action" onclick="clearDoneTodos()" title="Remove completed tasks">Clear</button>
+                </div>
+
+                <!-- Tab 1: Todo Tracker -->
+                <div id="tab-tasks" class="widget-pane active">
+                    <input type="text" id="todo-input" class="todo-input" placeholder="Task (!h, !m, !l for priority) + Enter..." onkeydown="addTodo(event)">
+                    <ul id="todo-list"></ul>
+                </div>
+
+                <!-- Tab 2: Daily Resetting Habits -->
+                <div id="tab-habits" class="widget-pane">
+                    <input type="text" id="habit-input" class="todo-input" placeholder="Add daily habit + Enter..." onkeydown="addHabit(event)">
+                    <ul id="habit-list"></ul>
+                </div>
+
+                <!-- Tab 3: One-Click Copy Snippets -->
+                <div id="tab-snippets" class="widget-pane">
+                    <input type="text" id="snippet-input" class="todo-input" placeholder="Title :: Command + Enter..." onkeydown="addSnippet(event)">
+                    <ul id="snippet-list"></ul>
+                </div>
+            </section>
+
+            <!-- 4 Bookmarks Sections (Pre-populated & Synced with JS, each with Visible Scrollbar) -->
+            <section id="bookmarks" class="zen-target">
+                <ul>
+                    <li class="col-title"><span>// CS_AND_AI</span></li>
+                    <li class="bm-item"><a href="https://github.com"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" class="favicon" alt="">GitHub</a></li>
+                    <li class="bm-item"><a href="https://leetcode.com"><img src="https://www.google.com/s2/favicons?domain=leetcode.com&sz=64" class="favicon" alt="">LeetCode</a></li>
+                    <li class="bm-item"><a href="https://www.hackerrank.com"><img src="https://www.google.com/s2/favicons?domain=www.hackerrank.com&sz=64" class="favicon" alt="">HackerRank</a></li>
+                    <li class="bm-item"><a href="https://www.kaggle.com"><img src="https://www.google.com/s2/favicons?domain=www.kaggle.com&sz=64" class="favicon" alt="">Kaggle</a></li>
+                    <li class="bm-item"><a href="https://huggingface.co"><img src="https://www.google.com/s2/favicons?domain=huggingface.co&sz=64" class="favicon" alt="">HuggingFace</a></li>
+                    <li class="bm-item"><a href="https://www.onlinegdb.com"><img src="https://www.google.com/s2/favicons?domain=www.onlinegdb.com&sz=64" class="favicon" alt="">OnlineGDB</a></li>
+                </ul>
+                <ul>
+                    <li class="col-title"><span>// CYBERSEC</span></li>
+                    <li class="bm-item"><a href="https://www.offsec.com/"><img src="https://www.google.com/s2/favicons?domain=www.offsec.com&sz=64" class="favicon" alt="">OffSec</a></li>
+                    <li class="bm-item"><a href="https://tryhackme.com"><img src="https://www.google.com/s2/favicons?domain=tryhackme.com&sz=64" class="favicon" alt="">TryHackMe</a></li>
+                    <li class="bm-item"><a href="https://www.hackthebox.com"><img src="https://www.google.com/s2/favicons?domain=www.hackthebox.com&sz=64" class="favicon" alt="">HackTheBox</a></li>
+                    <li class="bm-item"><a href="https://portswigger.net/web-security"><img src="https://www.google.com/s2/favicons?domain=portswigger.net&sz=64" class="favicon" alt="">PortSwigger</a></li>
+                    <li class="bm-item"><a href="https://www.shodan.io"><img src="https://www.google.com/s2/favicons?domain=www.shodan.io&sz=64" class="favicon" alt="">Shodan</a></li>
+                </ul>
+                <ul>
+                    <li class="col-title"><span>// WEBDEV_&_DOCS</span></li>
+                    <li class="bm-item"><a href="https://www.codecademy.com"><img src="https://www.google.com/s2/favicons?domain=www.codecademy.com&sz=64" class="favicon" alt="">Codecademy</a></li>
+                    <li class="bm-item"><a href="https://www.freecodecamp.org"><img src="https://www.google.com/s2/favicons?domain=www.freecodecamp.org&sz=64" class="favicon" alt="">freeCodeCamp</a></li>
+                    <li class="bm-item"><a href="https://www.w3schools.com"><img src="https://www.google.com/s2/favicons?domain=www.w3schools.com&sz=64" class="favicon" alt="">W3Schools</a></li>
+                    <li class="bm-item"><a href="https://www.youtube.com/playlist?list=PLu0W_9lII9agS67Uits0UnJyrYiXhDS6q"><img src="https://www.google.com/s2/favicons?domain=www.youtube.com&sz=64" class="favicon" alt="">WebDev List</a></li>
+                    <li class="bm-item"><a href="https://app.pwioi.club/dashboard/student/attendance"><img src="https://www.google.com/s2/favicons?domain=app.pwioi.club&sz=64" class="favicon" alt="">PWIOI Attend</a></li>
+                    <li class="bm-item"><a href="https://docs.google.com/spreadsheets/d/1RnkPP_H7VByIJ49UVulB1dQ2ocnuGD3sH2WtUo8LQ3Y/edit?gid=0#gid=0"><img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=64" class="favicon" alt="">Track Sheet</a></li>
+                    <li class="bm-item"><a href="https://notebook.google.com/?pli=1"><img src="https://www.google.com/s2/favicons?domain=notebook.google.com&sz=64" class="favicon" alt="">NotebookLM</a></li>
+                    <li class="bm-item"><a href="https://codebeautify.org/"><img src="https://www.google.com/s2/favicons?domain=codebeautify.org&sz=64" class="favicon" alt="">CodeBeautify</a></li>
+                </ul>
+                <ul>
+                    <li class="col-title"><span>// AI_&_MEDIA</span></li>
+                    <li class="bm-item"><a href="https://chatgpt.com"><img src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=64" class="favicon" alt="">ChatGPT</a></li>
+                    <li class="bm-item"><a href="https://chat.deepseek.com"><img src="https://www.google.com/s2/favicons?domain=chat.deepseek.com&sz=64" class="favicon" alt="">DeepSeek</a></li>
+                    <li class="bm-item"><a href="https://claude.ai"><img src="https://www.google.com/s2/favicons?domain=claude.ai&sz=64" class="favicon" alt="">Claude AI</a></li>
+                    <li class="bm-item"><a href="https://gemini.google.com"><img src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64" class="favicon" alt="">Gemini</a></li>
+                    <li class="bm-item"><a href="https://www.perplexity.ai/"><img src="https://www.google.com/s2/favicons?domain=www.perplexity.ai&sz=64" class="favicon" alt="">Perplexity</a></li>
+                    <li class="bm-item"><a href="https://www.youtube.com/"><img src="https://www.google.com/s2/favicons?domain=www.youtube.com&sz=64" class="favicon" alt="">YouTube</a></li>
+                    <li class="bm-item"><a href="https://web.whatsapp.com/"><img src="https://www.google.com/s2/favicons?domain=web.whatsapp.com&sz=64" class="favicon" alt="">WhatsApp</a></li>
+                    <li class="bm-item"><a href="https://soundscode.com/"><img src="https://www.google.com/s2/favicons?domain=soundscode.com&sz=64" class="favicon" alt="">SoundsCode</a></li>
+                </ul>
+            </section>
+        </section>
+    </main>
+
+    <!-- Subconscious Scratchpad & Telemetry Drawer -->
+    <section id="scratchpad-wrap" class="zen-target">
+        <div class="sp-top-bar">
+            <div class="widget-header" style="color: var(--violet); margin: 0;">&gt; BRAIN_DUMP.md</div>
+            <div class="sp-actions">
+                <span id="sp-stats">0w · 0c</span>
+                <button type="button" onclick="downloadScratchpad()" title="Download as Markdown">.MD ↓</button>
+                <button type="button" onclick="exportAllData()" title="Backup all settings & links to JSON">Backup</button>
+                <button type="button" onclick="triggerImportData()" title="Restore from JSON backup">Restore</button>
+                <input type="file" id="import-file" accept=".json" style="display:none" onchange="importAllData(event)">
+            </div>
+        </div>
+        <textarea id="scratchpad" placeholder="Offload your mind here. It saves automatically..."></textarea>
+        <div class="sp-footer">
+            <div class="sp-pomo-title">7-DAY FOCUS TELEMETRY (🍅 SESSIONS)</div>
+            <div id="pomo-chart" class="pomo-chart"></div>
+        </div>
+    </section>
+
+    <!-- Visual Keyboard Shortcuts & Command Guide Modal (⌥K) -->
+    <div id="shortcuts-modal" class="modal-overlay">
+        <div class="modal-box shortcuts-box">
+            <div class="overlay-bar" style="margin-bottom: 0.8rem;">
+                <span style="color:var(--cyan); font-size:0.88rem;">⌨️ MACOS KEYBOARD SHORTCUTS & OMNI COMMANDS (CLICK ANY TO RUN)</span>
+                <button type="button" class="close-pill" onclick="closeShortcutsModal()">Esc ×</button>
+            </div>
+            <div class="shortcuts-grid">
+                <div class="sc-col">
+                    <h4>⚡ macOS Shortcuts</h4>
+                    <div class="sc-row" onclick="toggleZenMode(); closeShortcutsModal();"><span>Zen Mode (Hide Clutter)</span><kbd>⌥ + Z</kbd></div>
+                    <div class="sc-row" onclick="togglePomodoro(); closeShortcutsModal();"><span>Start/Stop 25m Pomodoro</span><kbd>⌥ + P</kbd></div>
+                    <div class="sc-row" onclick="cycleAudio();"><span>Focus Audio (Brown/Pink/40Hz)</span><kbd>⌥ + A</kbd></div>
+                    <div class="sc-row" onclick="toggleBreathing(); closeShortcutsModal();"><span>Box Breathing Pacer (4-4-4-4)</span><kbd>⌥ + B</kbd></div>
+                    <div class="sc-row" onclick="toggleGmailMenu(event); closeShortcutsModal();"><span>Open Root Mailboxes</span><kbd>⌥ + M</kbd></div>
+                    <div class="sc-row" onclick="toggleScratchpad(); closeShortcutsModal();"><span>Open Brain Dump Pad</span><kbd>⌥ + S</kbd></div>
+                    <div class="sc-row" onclick="cycleTheme();"><span>Cycle 10 Calm Themes</span><kbd>⌥ + T</kbd></div>
+                    <div class="sc-row" onclick="toggleEditMode(); closeShortcutsModal();"><span>Edit / Add / Delete Sites & Tools</span><kbd>⌥ + E</kbd></div>
+                    <div class="sc-row" onclick="closeShortcutsModal(); document.getElementById('q').focus();"><span>Focus Search / Command Bar</span><kbd>/ or ⌘K</kbd></div>
+                </div>
+                <div class="sc-col">
+                    <h4>🛠️ OffSec & Dev Commands</h4>
+                    <div class="sc-row" onclick="runQuickCmd('cheat dorks'); closeShortcutsModal();"><span>Google Dorks Cheat-Sheet</span><kbd>cheat dorks</kbd></div>
+                    <div class="sc-row" onclick="runQuickCmd('cheat linux'); closeShortcutsModal();"><span>Linux / OffSec Cheat-Sheet</span><kbd>cheat linux</kbd></div>
+                    <div class="sc-row" onclick="runQuickCmd('cheat privesc'); closeShortcutsModal();"><span>Linux PrivEsc Checklist</span><kbd>cheat privesc</kbd></div>
+                    <div class="sc-row" onclick="runQuickCmd('rev 10.10.14.2 4444'); closeShortcutsModal();"><span>Reverse Shell Generator</span><kbd>rev [ip] [port]</kbd></div>
+                    <div class="sc-row" onclick="fillQuickCmd('b64 '); closeShortcutsModal();"><span>Base64 Encode / Decode</span><kbd>b64 [text]</kbd></div>
+                    <div class="sc-row" onclick="fillQuickCmd('jwt '); closeShortcutsModal();"><span>Decode JWT Token Locally</span><kbd>jwt [token]</kbd></div>
+                    <div class="sc-row" onclick="fillQuickCmd('hash '); closeShortcutsModal();"><span>SHA-256 & SHA-1 Hash</span><kbd>hash [text]</kbd></div>
+                    <div class="sc-row" onclick="runQuickCmd('cidr 10.10.14.0/24'); closeShortcutsModal();"><span>Subnet / CIDR Calculator</span><kbd>cidr [ip/mask]</kbd></div>
+                    <div class="sc-row" onclick="runQuickCmd('pass 20'); closeShortcutsModal();"><span>Copy 20-Char Secure Password</span><kbd>pass [len]</kbd></div>
+                </div>
+                <div class="sc-col">
+                    <h4>🚀 Search Bangs & Productivity</h4>
+                    <div class="sc-row" onclick="fillQuickCmd('gh '); closeShortcutsModal();"><span>Search GitHub Directly</span><kbd>gh [query]</kbd></div>
+                    <div class="sc-row" onclick="fillQuickCmd('yt '); closeShortcutsModal();"><span>Search YouTube Directly</span><kbd>yt [query]</kbd></div>
+                    <div class="sc-row" onclick="fillQuickCmd('sh '); closeShortcutsModal();"><span>Search Shodan.io</span><kbd>sh [query]</kbd></div>
+                    <div class="sc-row" onclick="fillQuickCmd('cve '); closeShortcutsModal();"><span>Search NIST CVE Database</span><kbd>cve [query]</kbd></div>
+                    <div class="sc-row" onclick="fillQuickCmd('ai '); closeShortcutsModal();"><span>Ask ChatGPT Directly</span><kbd>ai [prompt]</kbd></div>
+                    <div class="sc-row" onclick="fillQuickCmd('add '); closeShortcutsModal();"><span>Quick Add Task (!h, !m, !l)</span><kbd>add [task] !h</kbd></div>
+                    <div class="sc-row" onclick="fillQuickCmd('focus '); closeShortcutsModal();"><span>Lock In Primary Mission</span><kbd>focus [goal]</kbd></div>
+                    <div class="sc-row" onclick="runQuickCmd('pomo 50'); closeShortcutsModal();"><span>Custom 50m Deep Work Timer</span><kbd>pomo 50</kbd></div>
+                    <div class="sc-row" onclick="openToolModal(); closeShortcutsModal();"><span>Create Custom Cheat-Sheet / Tool</span><kbd>+ Cheat</kbd></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding / Editing Custom Cheat-Sheets & Instant Tools -->
+    <div id="tool-modal" class="modal-overlay">
+        <div class="modal-box tool-modal-box">
+            <div class="modal-title" id="tool-modal-title">CREATE / EDIT INSTANT TOOL OR CHEAT-SHEET</div>
+            <input type="hidden" id="tool-edit-idx" value="">
+            <div class="tool-type-switch">
+                <button type="button" id="tt-cheat-btn" class="tt-btn active" onclick="setToolModalMode('cheat')">📜 Custom Cheat-Sheet</button>
+                <button type="button" id="tt-cmd-btn" class="tt-btn" onclick="setToolModalMode('cmd')">⚡ Quick Command Pill</button>
+            </div>
+            <input type="text" id="tool-label-input" placeholder="Button Label (e.g., 🦀 Rust or ⚡ AD)" autocomplete="off">
+            <input type="text" id="tool-key-input" placeholder="Cheat Key (e.g., rust -> runs 'cheat rust')" autocomplete="off">
+            <textarea id="tool-content-input" rows="7" placeholder="Write your Cheat-Sheet content here (each line or command)..."></textarea>
+            <div class="modal-btns">
+                <button type="button" onclick="closeToolModal()">Cancel</button>
+                <button type="button" class="primary" onclick="saveCustomTool()">Save Tool</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding Bookmarks -->
+    <div id="site-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-title">ADD NEW TARGET_NODE</div>
+            <input type="text" id="modal-site-name" placeholder="Site Name (e.g., GitHub)" autocomplete="off">
+            <input type="url" id="modal-site-url" placeholder="URL (e.g., https://github.com)" autocomplete="off">
+            <input type="hidden" id="modal-section-idx">
+            <div class="modal-btns">
+                <button type="button" onclick="closeSiteModal()">Cancel</button>
+                <button type="button" class="primary" onclick="saveNewSite()">Add Target</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for adding Dock Items -->
+    <div id="dock-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-title">ADD DOCK APP</div>
+            <input type="text" id="dock-site-name" placeholder="App Name (e.g., Notion)" autocomplete="off">
+            <input type="url" id="dock-site-url" placeholder="URL (e.g., https://notion.so)" autocomplete="off">
+            <input type="text" id="dock-site-color" placeholder="Color Hex (e.g., #3fd9e8) - Optional" autocomplete="off">
+            <div class="modal-btns">
+                <button type="button" onclick="closeDockModal()">Cancel</button>
+                <button type="button" class="primary" onclick="saveDockSite()">Add App</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subtle Toast Notification -->
+    <div id="toast" aria-live="polite"></div>
+    
+    <!-- Always-Visible Bottom Shortcut Bar -->
+    <div id="hint" class="zen-target">
+        <button type="button" onclick="toggleZenMode()" title="Hide/Show All Panels">🧘 Zen <kbd data-k="Z">⌥Z</kbd></button>
+        <button type="button" onclick="togglePomodoro()" title="Start/Stop 25m Focus Timer">⏱ Pomo <kbd data-k="P">⌥P</kbd></button>
+        <button type="button" onclick="cycleAudio()" title="Cycle Brown Noise / Pink Rain / 40Hz Gamma">🎧 Sound <kbd data-k="A">⌥A</kbd></button>
+        <button type="button" onclick="toggleBreathing()" title="Start 4-4-4-4 Box Breathing">🌬️ Breathe <kbd data-k="B">⌥B</kbd></button>
+        <button type="button" onclick="toggleGmailMenu(event)" title="Open All 7 Gmail Accounts">✉️ Gmail <kbd data-k="M">⌥M</kbd></button>
+        <button type="button" onclick="toggleScratchpad()" title="Open Brain Dump & Stats">📝 Pad <kbd data-k="S">⌥S</kbd></button>
+        <button type="button" onclick="cycleTheme()" title="Switch Calm Theme (⌥T)">🎨 Theme: <kbd id="theme-name">Agni</kbd> <kbd data-k="T">⌥T</kbd></button>
+        <button type="button" onclick="toggleEditMode()" title="Add/Delete/Drag Sites & Tools (⌥E)">✏️ Edit <kbd data-k="E">⌥E</kbd></button>
+        <button type="button" onclick="toggleShortcutsModal()" title="See All Shortcuts & Commands (⌥K)">⌨️ All Keys <kbd data-k="K">⌥K</kbd></button>
+    </div>
+</body>
+</html>
