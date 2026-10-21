@@ -20,7 +20,7 @@ function escapeHTML(str) {
 const FALLBACK_ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233fd9e8' stroke-width='2'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18'/%3E%3C/svg%3E";
 
 function safeHostname(url) {
-    try { return new URL(url).hostname; } catch (e) { return 'google.com'; }
+    try { return new URL(url).hostname; } catch (e) { return 'example.com'; }
 }
 
 function safeLoadJSON(key, fallback) {
@@ -29,7 +29,7 @@ function safeLoadJSON(key, fallback) {
         if (!raw) return JSON.parse(JSON.stringify(fallback));
         const parsed = JSON.parse(raw);
         if (Array.isArray(fallback)) {
-            if (!Array.isArray(parsed) || parsed.length === 0) return JSON.parse(JSON.stringify(fallback));
+            if (!Array.isArray(parsed)) return JSON.parse(JSON.stringify(fallback));
         }
         return parsed;
     } catch (e) {
@@ -54,16 +54,12 @@ function copyText(text, label = "Copied to clipboard") {
    1. DYNAMIC CHEAT-SHEETS & INSTANT TOOLS ENGINE
    ========================================= */
 const defaultCheatSheets = {
-    "dorks": "GOOGLE DORKS CHEAT-SHEET:\n• site:example.com -> Limit search to a site\n• intitle:\"index of\" -> Find open directories\n• filetype:pdf / ext:sql -> Find specific extensions\n• inurl:admin / inurl:login -> Find admin panels\n• cache:example.com -> View Google's cached version\n• intext:\"password\" ext:env -> Find exposed .env files",
+    "dorks": "GOOGLE DORKS CHEAT-SHEET:\n• site:test.com -> Limit search to a site\n• intitle:\"index of\" -> Find open directories\n• filetype:pdf / ext:sql -> Find specific extensions\n• inurl:admin / inurl:login -> Find admin panels\n• cache:test.com -> View Google's cached version\n• intext:\"password\" ext:env -> Find exposed .env files",
     "sql": "SQLi & SQL CHEAT-SHEET:\n• ' OR 1=1-- -> Basic auth bypass\n• UNION SELECT null, user()-- -> Enum columns/data\n• SELECT * FROM t WHERE x=1 -> Read rows\n• JOIN t2 ON t.id=t2.id -> Combine tables\n• GROUP BY col HAVING COUNT(*)>1 -> Aggregate\n• ORDER BY col DESC LIMIT 10 -> Top rows",
     "linux": "LINUX / OFFSEC CHEAT-SHEET:\n• sudo -l -> Check sudo privileges\n• find / -perm -4000 2>/dev/null -> Find SUID binaries\n• crontab -l / cat /etc/crontab -> Check cron jobs\n• grep -rnw '/path' -e 'password' -> Search text deeply\n• ss -tulpn / netstat -tulpn -> Active listening ports\n• tar -czvf archive.tar.gz /folder -> Compress",
     "privesc": "LINUX PRIVESC CHECKLIST:\n• uname -a && cat /etc/os-release -> Kernel & OS\n• find / -writable -type d 2>/dev/null -> Writable dirs\n• getcap -r / 2>/dev/null -> File capabilities\n• cat ~/.bash_history -> Historical creds\n• ls -la /etc/passwd /etc/shadow -> File permissions\n• pspy64 -> Monitor processes without root",
     "nmap": "NMAP OFFSEC CHEAT-SHEET:\n• nmap -sC -sV -oA scan <ip> -> Default script & version\n• nmap -p- --min-rate 1000 <ip> -> Fast full port scan\n• nmap -sU --top-ports 100 <ip> -> Top UDP ports\n• nmap -Pn <ip> -> Skip host discovery (Ping block)",
-    "docker": "DOCKER CHEAT-SHEET:\n• docker ps -a -> List all containers\n• docker run -it --rm <img_name> /bin/bash -> Run interactive\n• docker exec -it <id> sh -> Shell into running container\n• docker build -t name . -> Build image from Dockerfile",
-    "python": "PYTHON CHEAT-SHEET:\n• python3 -m http.server 8000 -> Quick web server\n• python3 -m venv .venv -> Create Virtual env\n• pip install -r requirements.txt -> Install deps\n• python3 -c 'import pty;pty.spawn(\"/bin/bash\")' -> TTY upgrade",
-    "git": "GIT CHEAT-SHEET:\n• git status -> Check changes\n• git add . && git commit -m 'msg' -> Stage & commit\n• git push origin main -> Push to remote repository\n• git log --oneline --graph -> Compact visual history\n• git reset --soft HEAD~1 -> Undo last commit, keep changes",
-    "tmux": "TMUX CHEAT-SHEET:\n• tmux new -s <name> -> New session\n• Ctrl+b d -> Detach session\n• tmux a -t <name> -> Re-attach session\n• Ctrl+b % / \" -> Split pane vertically / horizontally\n• Ctrl+b [ -> Enter scroll/copy mode",
-    "vim": "VIM CHEAT-SHEET:\n• :w / :q / :wq / :q! -> Save, quit, save+quit, force quit\n• gg / G -> Top / Bottom of file\n• dd / yy / p -> Cut line, Yank line, Paste\n• :%s/old/new/g -> Replace all occurrences in file\n• u / Ctrl+r -> Undo / Redo"
+    "git": "GIT CHEAT-SHEET:\n• git status -> Check changes\n• git add . && git commit -m 'msg' -> Stage & commit\n• git push origin main -> Push to remote repository\n• git log --oneline --graph -> Compact visual history\n• git reset --soft HEAD~1 -> Undo last commit, keep changes"
 };
 
 const defaultQuickTools = [
@@ -167,8 +163,7 @@ function deleteQuickTool(idx) {
     showToast(`Removed ${removed ? removed.label : 'tool'}`);
 }
 
-/* --- Custom Tool & Cheat-Sheet Modal Logic --- */
-let currentToolModalMode = 'cheat'; // 'cheat' or 'cmd'
+let currentToolModalMode = 'cheat';
 
 function setToolModalMode(mode) {
     currentToolModalMode = mode;
@@ -292,14 +287,13 @@ const commonPorts = {
 };
 
 /* =========================================
-   2. DYNAMIC DOCK ENGINE (WITH AUTO-RECOVERY)
+   2. DYNAMIC DOCK ENGINE (ADD, EDIT, DELETE, DRAG)
    ========================================= */
 const defaultDock = [
-    { name: "GitHub", url: "https://github.com", color: "var(--violet)" },
-    { name: "LeetCode", url: "https://leetcode.com", color: "var(--amber)" },
-    { name: "HackerRank", url: "https://www.hackerrank.com", color: "var(--green)" },
-    { name: "ChatGPT", url: "https://chatgpt.com", color: "var(--cyan)" },
-    { name: "Notion", url: "https://notion.so", color: "var(--text)" }
+    { name: "Test App 1", url: "https://test.com", color: "var(--violet)" },
+    { name: "Example Dev", url: "https://example.com", color: "var(--amber)" },
+    { name: "GitHub", url: "https://github.com", color: "var(--green)" },
+    { name: "MDN Docs", url: "https://developer.mozilla.org", color: "var(--cyan)" }
 ];
 
 let dockData = safeLoadJSON('traichu_dock', defaultDock);
@@ -322,13 +316,21 @@ function renderDock() {
         li.style.setProperty('--c', item.color || 'var(--cyan)');
         const domain = safeHostname(item.url);
         const iconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+        const tooltip = window.isEditMode ? `Click to Edit: ${item.name}` : item.name;
 
         li.innerHTML = `
-            <a href="${escapeHTML(item.url)}" title="${escapeHTML(item.name)}" onclick="if(window.isEditMode){ event.preventDefault(); return false; }">
+            <a href="${escapeHTML(item.url)}" title="${escapeHTML(tooltip)}">
                 <img src="${iconUrl}" class="dock-icon" alt="${escapeHTML(item.name)}" onerror="this.onerror=null;this.src='${FALLBACK_ICON}';">
             </a>
-            <button class="del-dock-btn" onclick="deleteDockItem(${idx})">×</button>
+            <button class="del-dock-btn" onclick="deleteDockItem(${idx})" title="Delete App">×</button>
         `;
+
+        li.querySelector('a').addEventListener('click', (e) => {
+            if (window.isEditMode) {
+                e.preventDefault();
+                openDockModal(idx);
+            }
+        });
 
         if (window.isEditMode) {
             li.addEventListener('dragstart', function(e) {
@@ -358,14 +360,31 @@ function deleteDockItem(idx) {
     dockData.splice(idx, 1);
     saveDock();
     renderDock();
+    showToast("Dock app removed");
 }
 
-function openDockModal() {
-    document.getElementById('dock-site-name').value = '';
-    document.getElementById('dock-site-url').value = '';
-    document.getElementById('dock-site-color').value = '';
+function openDockModal(editIdx = null) {
+    const idxInput = document.getElementById('dock-edit-idx');
+    const nameInput = document.getElementById('dock-site-name');
+    const urlInput = document.getElementById('dock-site-url');
+    const colorInput = document.getElementById('dock-site-color');
+    const titleEl = document.getElementById('dock-modal-title');
+
+    if (editIdx !== null && dockData[editIdx]) {
+        idxInput.value = String(editIdx);
+        nameInput.value = dockData[editIdx].name;
+        urlInput.value = dockData[editIdx].url;
+        colorInput.value = dockData[editIdx].color || '';
+        if (titleEl) titleEl.textContent = 'EDIT DOCK APP';
+    } else {
+        idxInput.value = '';
+        nameInput.value = '';
+        urlInput.value = '';
+        colorInput.value = '';
+        if (titleEl) titleEl.textContent = 'ADD DOCK APP';
+    }
     document.getElementById('dock-modal').classList.add('show');
-    document.getElementById('dock-site-name').focus();
+    nameInput.focus();
 }
 
 function closeDockModal() {
@@ -373,12 +392,19 @@ function closeDockModal() {
 }
 
 function saveDockSite() {
+    const editIdxStr = document.getElementById('dock-edit-idx').value;
     const name = document.getElementById('dock-site-name').value.trim();
     let url = document.getElementById('dock-site-url').value.trim();
     let color = document.getElementById('dock-site-color').value.trim() || 'var(--cyan)';
     if (name && url) {
         if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
-        dockData.push({ name, url, color });
+        if (editIdxStr !== '') {
+            dockData[parseInt(editIdxStr, 10)] = { name, url, color };
+            showToast(`✔ Updated ${name}`);
+        } else {
+            dockData.push({ name, url, color });
+            showToast(`✔ Added ${name}`);
+        }
         saveDock();
         renderDock();
         closeDockModal();
@@ -386,17 +412,173 @@ function saveDockSite() {
 }
 
 /* =========================================
+   2B. DYNAMIC GMAIL / EMAIL ACCOUNTS ENGINE
+   ========================================= */
+const defaultGmails = [
+    { name: "Primary Account", email: "user1@test.com", color: "#00897b", url: "" },
+    { name: "Work Mailbox", email: "work@test.com", color: "#3949ab", url: "" },
+    { name: "Security Lab", email: "admin@example.com", color: "#8e24aa", url: "" }
+];
+
+let gmailsData = safeLoadJSON('traichu_gmails', defaultGmails);
+function saveGmails() { localStorage.setItem('traichu_gmails', JSON.stringify(gmailsData)); }
+
+function renderGmails() {
+    const container = document.getElementById('gmail-list');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (gmailsData.length === 0) {
+        container.innerHTML = `<div style="padding: 0.8rem 1rem; color: var(--text-faint); font-size: 0.8rem;">No mailboxes added. Click '+ Email' above to add one.</div>`;
+        return;
+    }
+
+    gmailsData.forEach((acc, idx) => {
+        const row = document.createElement('div');
+        row.className = 'gm-item-row';
+
+        const badgeChar = (acc.name || acc.email || 'U').trim().charAt(0).toUpperCase();
+        const badgeColor = acc.color || '#00897b';
+        const targetHref = acc.url && acc.url.trim()
+            ? acc.url.trim()
+            : `https://mail.google.com/mail/?authuser=${encodeURIComponent(acc.email)}`;
+
+        row.innerHTML = `
+            <a href="${escapeHTML(targetHref)}" target="_blank" class="gm-link" title="${window.isEditMode ? 'Click to Edit Email' : escapeHTML(acc.email)}">
+                <span class="gm-badge" style="background: ${escapeHTML(badgeColor)};">${escapeHTML(badgeChar)}</span>
+                <div class="gm-info">
+                    <span>${escapeHTML(acc.name)}</span>
+                    <small>${escapeHTML(acc.email)}</small>
+                </div>
+            </a>
+            <div class="gm-item-actions">
+                <button type="button" class="gm-act-btn" onclick="openGmailModal(${idx})" title="Edit Email">✏️</button>
+                <button type="button" class="gm-act-btn del" onclick="deleteGmailAccount(${idx})" title="Remove Email">×</button>
+            </div>
+        `;
+
+        row.querySelector('.gm-link').addEventListener('click', (e) => {
+            if (window.isEditMode) {
+                e.preventDefault();
+                openGmailModal(idx);
+            }
+        });
+
+        container.appendChild(row);
+    });
+}
+
+function openGmailModal(editIdx = null) {
+    const idxInput = document.getElementById('gmail-edit-idx');
+    const nameInput = document.getElementById('gmail-name-input');
+    const emailInput = document.getElementById('gmail-email-input');
+    const colorInput = document.getElementById('gmail-color-input');
+    const urlInput = document.getElementById('gmail-url-input');
+    const titleEl = document.getElementById('gmail-modal-title');
+
+    if (editIdx !== null && gmailsData[editIdx]) {
+        const item = gmailsData[editIdx];
+        idxInput.value = String(editIdx);
+        nameInput.value = item.name || '';
+        emailInput.value = item.email || '';
+        colorInput.value = item.color || '#00897b';
+        urlInput.value = item.url || '';
+        if (titleEl) titleEl.textContent = 'EDIT EMAIL ACCOUNT';
+    } else {
+        idxInput.value = '';
+        nameInput.value = '';
+        emailInput.value = '';
+        colorInput.value = '#00897b';
+        urlInput.value = '';
+        if (titleEl) titleEl.textContent = 'ADD EMAIL ACCOUNT';
+    }
+    document.getElementById('gmail-modal').classList.add('show');
+    nameInput.focus();
+}
+
+function closeGmailModal() {
+    document.getElementById('gmail-modal').classList.remove('show');
+}
+
+function saveGmailAccount() {
+    const editIdxStr = document.getElementById('gmail-edit-idx').value;
+    const name = document.getElementById('gmail-name-input').value.trim();
+    const email = document.getElementById('gmail-email-input').value.trim();
+    const color = document.getElementById('gmail-color-input').value.trim() || '#00897b';
+    let url = document.getElementById('gmail-url-input').value.trim();
+
+    if (!name || !email) {
+        showToast("Please enter both Display Name and Email ID");
+        return;
+    }
+    if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+    }
+
+    const obj = { name, email, color, url };
+    if (editIdxStr !== '') {
+        gmailsData[parseInt(editIdxStr, 10)] = obj;
+        showToast(`✔ Updated ${email}`);
+    } else {
+        gmailsData.push(obj);
+        showToast(`✔ Added ${email}`);
+    }
+    saveGmails();
+    renderGmails();
+    closeGmailModal();
+}
+
+function deleteGmailAccount(idx) {
+    const removed = gmailsData.splice(idx, 1)[0];
+    saveGmails();
+    renderGmails();
+    showToast(`Removed ${removed ? removed.email : 'email'}`);
+}
+
+/* =========================================
    3. DYNAMIC BOOKMARKS ENGINE (4 SECTIONS)
    ========================================= */
 const defaultBookmarks = [
-    { title: "// CS_AND_AI", links: [ { name: "GitHub", url: "https://github.com" }, { name: "LeetCode", url: "https://leetcode.com" }, { name: "HackerRank", url: "https://www.hackerrank.com" }, { name: "Kaggle", url: "https://www.kaggle.com" }, { name: "HuggingFace", url: "https://huggingface.co" }, { name: "OnlineGDB", url: "https://www.onlinegdb.com" } ]},
-    { title: "// CYBERSEC", links: [ { name: "OffSec", url: "https://www.offsec.com/" }, { name: "TryHackMe", url: "https://tryhackme.com" }, { name: "HackTheBox", url: "https://www.hackthebox.com" }, { name: "PortSwigger", url: "https://portswigger.net/web-security" }, { name: "Shodan", url: "https://www.shodan.io" } ]},
-    { title: "// WEBDEV_&_DOCS", links: [ { name: "Codecademy", url: "https://www.codecademy.com" }, { name: "freeCodeCamp", url: "https://www.freecodecamp.org" }, { name: "W3Schools", url: "https://www.w3schools.com" }, { name: "WebDev List", url: "https://www.youtube.com/playlist?list=PLu0W_9lII9agS67Uits0UnJyrYiXhDS6q" }, { name: "PWIOI Attend", url: "https://app.pwioi.club/dashboard/student/attendance" }, { name: "Track Sheet", url: "https://docs.google.com/spreadsheets/d/1RnkPP_H7VByIJ49UVulB1dQ2ocnuGD3sH2WtUo8LQ3Y/edit?gid=0#gid=0" }, { name: "NotebookLM", url: "https://notebook.google.com/?pli=1" }, { name: "CodeBeautify", url: "https://codebeautify.org/" } ]},
-    { title: "// AI_&_MEDIA", links: [ { name: "ChatGPT", url: "https://chatgpt.com" }, { name: "DeepSeek", url: "https://chat.deepseek.com" }, { name: "Claude AI", url: "https://claude.ai" }, { name: "Gemini", url: "https://gemini.google.com" }, { name: "Perplexity", url: "https://www.perplexity.ai/" }, { name: "YouTube", url: "https://www.youtube.com/" }, { name: "WhatsApp", url: "https://web.whatsapp.com/" }, { name: "SoundsCode", url: "https://soundscode.com/" } ]}
+    {
+        title: "// DEV_&_CODE",
+        links: [
+            { name: "Test Site", url: "https://test.com" },
+            { name: "Example Portal", url: "https://example.com" },
+            { name: "GitHub", url: "https://github.com" },
+            { name: "StackOverflow", url: "https://stackoverflow.com" }
+        ]
+    },
+    {
+        title: "// CYBERSEC",
+        links: [
+            { name: "Sec Lab Test", url: "https://test.com/lab" },
+            { name: "OWASP", url: "https://owasp.org" },
+            { name: "PortSwigger", url: "https://portswigger.net" },
+            { name: "Shodan", url: "https://www.shodan.io" }
+        ]
+    },
+    {
+        title: "// DOCS_&_TOOLS",
+        links: [
+            { name: "Docs Test", url: "https://test.com/docs" },
+            { name: "MDN Web Docs", url: "https://developer.mozilla.org" },
+            { name: "DevDocs", url: "https://devdocs.io" },
+            { name: "CyberChef", url: "https://gchq.github.io/CyberChef/" }
+        ]
+    },
+    {
+        title: "// AI_&_MEDIA",
+        links: [
+            { name: "AI Sandbox", url: "https://test.com/ai" },
+            { name: "ChatGPT", url: "https://chatgpt.com" },
+            { name: "Claude AI", url: "https://claude.ai" },
+            { name: "YouTube", url: "https://www.youtube.com" }
+        ]
+    }
 ];
 
 let bookmarksData = safeLoadJSON('traichu_bookmarks', defaultBookmarks);
-if (!bookmarksData.some(col => col && Array.isArray(col.links) && col.links.length > 0)) {
+if (!bookmarksData.some(col => col && Array.isArray(col.links))) {
     bookmarksData = JSON.parse(JSON.stringify(defaultBookmarks));
     localStorage.setItem('traichu_bookmarks', JSON.stringify(bookmarksData));
 }
@@ -405,16 +587,19 @@ function saveBookmarks() { localStorage.setItem('traichu_bookmarks', JSON.string
 function restoreDefaultSites() {
     dockData = JSON.parse(JSON.stringify(defaultDock));
     bookmarksData = JSON.parse(JSON.stringify(defaultBookmarks));
+    gmailsData = JSON.parse(JSON.stringify(defaultGmails));
     cheatSheets = JSON.parse(JSON.stringify(defaultCheatSheets));
     quickTools = JSON.parse(JSON.stringify(defaultQuickTools));
     saveDock();
     saveBookmarks();
+    saveGmails();
     saveCheats();
     saveQuickTools();
     renderDock();
     renderBookmarks();
+    renderGmails();
     renderQuickTools();
-    showToast("✔ All Default Sites, Dock, Tools & Cheat-Sheets Restored!");
+    showToast("✔ All Default Test Sites, Emails, Dock & Tools Restored!");
 }
 
 let dragSource = { c: null, l: null };
@@ -436,7 +621,7 @@ function renderBookmarks() {
 
         ul.innerHTML = `
             <li class="col-title">
-                <span ${isEditMode ? 'contenteditable="true"' : ''} onblur="updateColTitle(${cIdx}, this.innerText)" spellcheck="false">${escapeHTML(section.title)}</span>
+                <span ${isEditMode ? 'contenteditable="true" title="Click to rename category"' : ''} onblur="updateColTitle(${cIdx}, this.innerText)" spellcheck="false">${escapeHTML(section.title)}</span>
                 <button type="button" class="add-btn" onclick="openSiteModal(${cIdx})" title="Add new link">+</button>
             </li>
         `;
@@ -452,12 +637,19 @@ function renderBookmarks() {
             const iconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 
             li.innerHTML = `
-                <a href="${escapeHTML(link.url)}" onclick="if(window.isEditMode){ event.preventDefault(); return false; }">
+                <a href="${escapeHTML(link.url)}" title="${isEditMode ? 'Click to Edit Link' : escapeHTML(link.url)}">
                     <img src="${iconUrl}" class="favicon" alt="" onerror="this.onerror=null;this.src='${FALLBACK_ICON}';">
                     ${escapeHTML(link.name)}
                 </a>
                 <button type="button" class="del-btn" onclick="deleteSite(${cIdx}, ${lIdx})" title="Remove link">×</button>
             `;
+
+            li.querySelector('a').addEventListener('click', (e) => {
+                if (window.isEditMode) {
+                    e.preventDefault();
+                    openSiteModal(cIdx, lIdx);
+                }
+            });
 
             if (isEditMode) {
                 li.addEventListener('dragstart', handleDragStart);
@@ -505,23 +697,48 @@ function moveBookmark(fromC, fromL, toC, toL) {
     saveBookmarks(); renderBookmarks();
 }
 
-function updateColTitle(colIndex, newTitle) { bookmarksData[colIndex].title = newTitle.trim(); saveBookmarks(); }
+function updateColTitle(colIndex, newTitle) { bookmarksData[colIndex].title = newTitle.trim() || '// SECTION'; saveBookmarks(); }
 function deleteSite(colIndex, linkIndex) { bookmarksData[colIndex].links.splice(linkIndex, 1); saveBookmarks(); renderBookmarks(); }
-function openSiteModal(colIndex) {
+
+function openSiteModal(colIndex, linkIndex = null) {
     document.getElementById('modal-section-idx').value = colIndex;
-    document.getElementById('modal-site-name').value = '';
-    document.getElementById('modal-site-url').value = '';
+    const linkIdxInput = document.getElementById('modal-link-idx');
+    const nameInput = document.getElementById('modal-site-name');
+    const urlInput = document.getElementById('modal-site-url');
+    const titleEl = document.getElementById('site-modal-title');
+
+    if (linkIndex !== null && bookmarksData[colIndex] && bookmarksData[colIndex].links[linkIndex]) {
+        const item = bookmarksData[colIndex].links[linkIndex];
+        linkIdxInput.value = String(linkIndex);
+        nameInput.value = item.name;
+        urlInput.value = item.url;
+        if (titleEl) titleEl.textContent = 'EDIT TARGET_NODE';
+    } else {
+        linkIdxInput.value = '';
+        nameInput.value = '';
+        urlInput.value = '';
+        if (titleEl) titleEl.textContent = 'ADD NEW TARGET_NODE';
+    }
     document.getElementById('site-modal').classList.add('show');
-    document.getElementById('modal-site-name').focus();
+    nameInput.focus();
 }
+
 function closeSiteModal() { document.getElementById('site-modal').classList.remove('show'); }
+
 function saveNewSite() {
-    const colIndex = document.getElementById('modal-section-idx').value;
+    const colIndex = parseInt(document.getElementById('modal-section-idx').value, 10);
+    const linkIdxStr = document.getElementById('modal-link-idx').value;
     const name = document.getElementById('modal-site-name').value.trim();
     let url = document.getElementById('modal-site-url').value.trim();
     if (name && url) {
         if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
-        bookmarksData[colIndex].links.push({ name, url });
+        if (linkIdxStr !== '') {
+            bookmarksData[colIndex].links[parseInt(linkIdxStr, 10)] = { name, url };
+            showToast(`✔ Updated ${name}`);
+        } else {
+            bookmarksData[colIndex].links.push({ name, url });
+            showToast(`✔ Added ${name}`);
+        }
         saveBookmarks(); renderBookmarks(); closeSiteModal();
     }
 }
@@ -536,42 +753,56 @@ function toggleEditMode() {
     document.body.classList.toggle('edit-mode', isEditMode);
 
     const btn = document.getElementById('edit-mode-btn');
-    const promptUser = document.getElementById('prompt-user');
+    const editableIds = ['greeting', 'subline-text', 'prompt-user', 'prompt-path', 'prompt-hash'];
+
     if (isEditMode) {
         btn.classList.add('active');
         btn.innerHTML = '💾';
         btn.title = "Save Changes (⌥E)";
-        document.getElementById('greeting').setAttribute('contenteditable', 'true');
-        document.getElementById('subline-text').setAttribute('contenteditable', 'true');
-        if (promptUser) promptUser.setAttribute('contenteditable', 'true');
-        showToast("Edit Mode ON — Edit/Delete/Add Tools, Cheat-Sheets, Sites & Text");
+        editableIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.setAttribute('contenteditable', 'true');
+        });
+        showToast("Edit Mode ON — Click any Site, Dock App, Email, Tool or Text to Edit!");
     } else {
         btn.classList.remove('active');
         btn.innerHTML = '✏️';
         btn.title = "Enter Edit Mode (⌥E)";
-        document.getElementById('greeting').removeAttribute('contenteditable');
-        document.getElementById('subline-text').removeAttribute('contenteditable');
-        if (promptUser) promptUser.removeAttribute('contenteditable');
+        editableIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.removeAttribute('contenteditable');
+        });
         saveHeroText();
-        showToast("All Customizations Saved");
+        showToast("✔ All Customizations Saved");
     }
     renderBookmarks();
     renderDock();
+    renderGmails();
     renderQuickTools();
 }
+
 function loadHeroText() {
     const g = localStorage.getItem('traichu_hero_greet');
     const s = localStorage.getItem('traichu_hero_sub');
-    const p = localStorage.getItem('traichu_prompt_user');
+    const pu = localStorage.getItem('traichu_prompt_user');
+    const pp = localStorage.getItem('traichu_prompt_path');
+    const ph = localStorage.getItem('traichu_prompt_hash');
     if (g) document.getElementById('greeting').innerText = g;
     if (s) document.getElementById('subline-text').innerText = s;
-    if (p && document.getElementById('prompt-user')) document.getElementById('prompt-user').innerText = p;
+    if (pu && document.getElementById('prompt-user')) document.getElementById('prompt-user').innerText = pu;
+    if (pp && document.getElementById('prompt-path')) document.getElementById('prompt-path').innerText = pp;
+    if (ph && document.getElementById('prompt-hash')) document.getElementById('prompt-hash').innerText = ph;
 }
+
 function saveHeroText() {
-    localStorage.setItem('traichu_hero_greet', document.getElementById('greeting').innerText.trim() || 'Welcome Intruder!');
-    localStorage.setItem('traichu_hero_sub', document.getElementById('subline-text').innerText.trim() || 'Hack the planet. Stay focused.');
+    localStorage.setItem('traichu_hero_greet', document.getElementById('greeting').innerText.trim() || 'Welcome Operator!');
+    localStorage.setItem('traichu_hero_sub', document.getElementById('subline-text').innerText.trim() || 'Build things. Stay focused.');
     const pu = document.getElementById('prompt-user');
-    if (pu) localStorage.setItem('traichu_prompt_user', pu.innerText.trim() || 'root@offsec');
+    const pp = document.getElementById('prompt-path');
+    const ph = document.getElementById('prompt-hash');
+    if (pu) localStorage.setItem('traichu_prompt_user', pu.innerText.trim() || 'user@warmode');
+    if (pp) localStorage.setItem('traichu_prompt_path', pp.innerText.trim() || '~');
+    if (ph) localStorage.setItem('traichu_prompt_hash', ph.innerText.trim() || '$');
 }
 
 /* =========================================
@@ -805,7 +1036,10 @@ function renderTodos() {
                 ${pill}
                 <span>${escapeHTML(t.text)}</span>
             </label>
-            <button type="button" class="del-row-btn" title="Delete task" onclick="deleteTodo(${i})">×</button>
+            <div class="row-actions">
+                <button type="button" class="del-row-btn" title="Edit task" onclick="editTodo(${i})">✏️</button>
+                <button type="button" class="del-row-btn" title="Delete task" onclick="deleteTodo(${i})">×</button>
+            </div>
         `;
         list.appendChild(li);
     });
@@ -824,6 +1058,16 @@ function addTodo(e) {
         }
     }
 }
+function editTodo(i) {
+    if (!todos[i]) return;
+    const input = document.getElementById('todo-input');
+    const suffix = todos[i].prio ? ` !${todos[i].prio}` : '';
+    input.value = todos[i].text + suffix;
+    todos.splice(i, 1);
+    localStorage.setItem('traichu_todos', JSON.stringify(todos));
+    renderTodos();
+    input.focus();
+}
 function toggleTodo(i) { todos[i].done = !todos[i].done; localStorage.setItem('traichu_todos', JSON.stringify(todos)); renderTodos(); }
 function deleteTodo(i) { todos.splice(i, 1); localStorage.setItem('traichu_todos', JSON.stringify(todos)); renderTodos(); }
 function clearDoneTodos() {
@@ -835,8 +1079,8 @@ function clearDoneTodos() {
 
 /* --- Daily Resetting Habits & Streak Engine --- */
 const defaultHabits = [
-    { text: "Solve 2 LeetCode Problems", done: false },
-    { text: "1 Hr OffSec / HTB Lab", done: false },
+    { text: "Daily Coding / Problem Solving", done: false },
+    { text: "1 Hr Security / Dev Lab", done: false },
     { text: "Deep Work Block (No Phone)", done: false }
 ];
 let habits = safeLoadJSON('traichu_habits', defaultHabits);
@@ -881,7 +1125,10 @@ function renderHabits() {
                 <input type="checkbox" ${h.done ? 'checked' : ''} onchange="toggleHabit(${i})">
                 <span>${escapeHTML(h.text)}</span>
             </label>
-            <button type="button" class="del-row-btn" onclick="deleteHabit(${i})">×</button>
+            <div class="row-actions">
+                <button type="button" class="del-row-btn" title="Edit habit" onclick="editHabit(${i})">✏️</button>
+                <button type="button" class="del-row-btn" title="Delete habit" onclick="deleteHabit(${i})">×</button>
+            </div>
         `;
         list.appendChild(li);
     });
@@ -899,6 +1146,15 @@ function addHabit(e) {
             renderHabits();
         }
     }
+}
+function editHabit(i) {
+    if (!habits[i]) return;
+    const input = document.getElementById('habit-input');
+    input.value = habits[i].text;
+    habits.splice(i, 1);
+    localStorage.setItem('traichu_habits', JSON.stringify(habits));
+    renderHabits();
+    input.focus();
 }
 function toggleHabit(i) {
     habits[i].done = !habits[i].done;
@@ -930,7 +1186,10 @@ function renderSnippets() {
                 <span class="snip-title">${escapeHTML(s.title)}</span>
                 <code class="snip-code">${escapeHTML(s.code)}</code>
             </div>
-            <button type="button" class="del-row-btn" onclick="deleteSnippet(${i})">×</button>
+            <div class="row-actions">
+                <button type="button" class="del-row-btn" title="Edit snippet" onclick="editSnippet(${i})">✏️</button>
+                <button type="button" class="del-row-btn" title="Delete snippet" onclick="deleteSnippet(${i})">×</button>
+            </div>
         `;
         list.appendChild(li);
     });
@@ -951,6 +1210,15 @@ function addSnippet(e) {
         e.target.value = '';
         renderSnippets();
     }
+}
+function editSnippet(i) {
+    if (!snippets[i]) return;
+    const input = document.getElementById('snippet-input');
+    input.value = `${snippets[i].title} :: ${snippets[i].code}`;
+    snippets.splice(i, 1);
+    localStorage.setItem('traichu_snippets', JSON.stringify(snippets));
+    renderSnippets();
+    input.focus();
 }
 function deleteSnippet(i) {
     snippets.splice(i, 1);
@@ -1090,6 +1358,11 @@ function getAllSearchableItems() {
         col.links.forEach(l => items.push({ type: col.title.replace('// ', ''), name: l.name, url: l.url }));
     });
     dockData.forEach(d => items.push({ type: 'DOCK', name: d.name, url: d.url }));
+    gmailsData.forEach(g => items.push({
+        type: 'MAIL',
+        name: `${g.name} (${g.email})`,
+        url: g.url || `https://mail.google.com/mail/?authuser=${encodeURIComponent(g.email)}`
+    }));
     Object.keys(cheatSheets).forEach(k => items.push({ type: 'CHEAT', name: `cheat ${k}`, cmd: `cheat ${k}` }));
     return items;
 }
@@ -1368,7 +1641,7 @@ function toggleBreathing() {
 }
 
 /* =========================================
-   11. MACOS SHORTCUTS & EVENT LISTENERS
+   11. KEYBOARD SHORTCUTS & EVENT LISTENERS
    ========================================= */
 document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.code === 'KeyK') {
@@ -1412,6 +1685,7 @@ document.addEventListener('keydown', (e) => {
         closeOmniSuggestions();
         closeSiteModal();
         closeDockModal();
+        closeGmailModal();
         closeToolModal();
         closeShortcutsModal();
         document.getElementById('scratchpad-wrap').classList.remove('show');
@@ -1432,7 +1706,10 @@ function updateOmniActiveClass() {
 
 document.addEventListener('click', (e) => {
     const dockWrap = document.getElementById('dock-wrap');
-    if (dockWrap && !dockWrap.contains(e.target)) closeGmailMenu();
+    const gmailModal = document.getElementById('gmail-modal');
+    if (dockWrap && !dockWrap.contains(e.target) && (!gmailModal || !gmailModal.contains(e.target))) {
+        closeGmailMenu();
+    }
     const searchArea = document.getElementById('search-area');
     if (searchArea && !searchArea.contains(e.target)) {
         closeCheatOverlay();
@@ -1440,6 +1717,7 @@ document.addEventListener('click', (e) => {
     }
     if (e.target === document.getElementById('site-modal')) closeSiteModal();
     if (e.target === document.getElementById('dock-modal')) closeDockModal();
+    if (e.target === document.getElementById('gmail-modal')) closeGmailModal();
     if (e.target === document.getElementById('tool-modal')) closeToolModal();
     if (e.target === document.getElementById('shortcuts-modal')) closeShortcutsModal();
 });
@@ -1610,6 +1888,7 @@ function traichu() {
     renderFocus();
     renderBookmarks();
     renderDock();
+    renderGmails();
     renderQuickTools();
     loadHeroText();
 
