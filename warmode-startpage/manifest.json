@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "version": "1.0",
-  "name": "Traichu Theme",
-  "description": "Custom Traichu Theme for Brave",
+  "name": "P1YUSH theme",
+  "description": "Custom P1YUSH Theme for Brave",
   "theme": {
     "colors": {
       "frame": [26, 27, 38],
