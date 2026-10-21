@@ -1,6 +1,7 @@
 <div align="center">
-<img src="./favicon-32x32.png" width="72" height="72" alt="WarMode Logo" />
 <h1>⚡ WARMODE STARTPAGE</h1>
+<img src="2026-10-21_12-28.png" alt="WarMode Logo" style="max-width:100%; height:auto; display:block;" />
+  
 <p><b>Where Peak Calmness Meets God-Level OffSec Productivity.</b></p>
 <p><i>A distraction-free, aesthetic, offline-first browser command center engineered for developers, security researchers, and deep-focus work.</i></p>
 <p>
