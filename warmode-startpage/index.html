@@ -16,14 +16,14 @@
 
     <!-- Floating Action Buttons (Bottom Right) -->
     <div class="fab-group zen-target">
-        <button id="reset-sites-btn" onclick="restoreDefaultSites()" title="Restore All Default Sites, Tools & Cheat-Sheets" style="display:none;">↺</button>
+        <button id="reset-sites-btn" onclick="restoreDefaultSites()" title="Restore All Default Sites, Emails, Tools & Cheat-Sheets" style="display:none;">↺</button>
         <button id="edit-mode-btn" onclick="toggleEditMode()" title="Toggle Edit Mode (⌥E)">✏️</button>
     </div>
 
     <main>
         <header>
             <section id="date-time">
-                <span id="prompt-user" class="prompt-user" onblur="saveHeroText()" spellcheck="false">root@offsec</span><span class="prompt-colon">:</span><span class="prompt-path">~</span><span class="prompt-hash">#</span><span class="prompt-cursor"></span>
+                <span id="prompt-user" class="prompt-user" onblur="saveHeroText()" spellcheck="false">user@warmode</span><span class="prompt-colon">:</span><span id="prompt-path" class="prompt-path" onblur="saveHeroText()" spellcheck="false">~</span><span id="prompt-hash" class="prompt-hash" onblur="saveHeroText()" spellcheck="false">$</span><span class="prompt-cursor"></span>
                 <span id="clock-display" onclick="togglePomodoro()" title="Click to start/stop 25m Pomodoro (⌥P)">00:00:00</span>
             </section>
             <div id="day-progress" title="Share of today elapsed">
@@ -39,22 +39,16 @@
 
         <section id="app">
             <div id="hero">
-                <!-- Animated Cyber-Zen Reactor Mandala (Replaces Pokemon SVG) -->
+                <!-- Animated Cyber-Zen Reactor Mandala -->
                 <aside id="zen-aside" onclick="toggleBreathing()" title="Click for 60s Box Breathing Pacer (⌥B)">
                     <svg class="cyber-zen-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
-                        <!-- Outer Telemetry Ring -->
                         <circle class="cz-ring-outer" cx="60" cy="60" r="54" stroke="var(--cyan)" stroke-width="1.5" stroke-opacity="0.35" stroke-dasharray="6 6" />
-                        <!-- Counter-Rotating Sacred Octagon Ring -->
                         <circle class="cz-ring-mid" cx="60" cy="60" r="44" stroke="var(--accent)" stroke-width="1.8" stroke-opacity="0.55" stroke-dasharray="28 14" />
-                        <!-- Geometric Lotus / Hex Frame -->
-                        <polygon class="cz-poly" points="60,18 96,39 96,81 60,102 24,81 24,39" stroke="var(--amber)" stroke-width="1.5" stroke-opacity="0.45" fill=" rgba(255,255,255,0.015)" />
+                        <polygon class="cz-poly" points="60,18 96,39 96,81 60,102 24,81 24,39" stroke="var(--amber)" stroke-width="1.5" stroke-opacity="0.45" fill="rgba(255,255,255,0.015)" />
                         <polygon class="cz-poly-inner" points="60,26 89,77 31,77" stroke="var(--cyan)" stroke-width="1.2" stroke-opacity="0.35" />
                         <polygon class="cz-poly-inner" points="60,94 89,43 31,43" stroke="var(--accent)" stroke-width="1.2" stroke-opacity="0.35" />
-                        <!-- Inner Core Ring -->
                         <circle class="cz-core-ring" cx="60" cy="60" r="18" stroke="var(--text)" stroke-width="1.5" stroke-opacity="0.7" />
-                        <!-- Glowing Center Singularity -->
                         <circle class="cz-core-dot" cx="60" cy="60" r="7" fill="var(--accent)" />
-                        <!-- Cardinal Axis Ticks -->
                         <line x1="60" y1="2" x2="60" y2="12" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" />
                         <line x1="60" y1="108" x2="60" y2="118" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" />
                         <line x1="2" y1="60" x2="12" y2="60" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" />
@@ -62,9 +56,9 @@
                     </svg>
                 </aside>
                 <div class="hero-text">
-                    <h1 id="greeting" onblur="saveHeroText()" spellcheck="false">Welcome Intruder!</h1>
+                    <h1 id="greeting" onblur="saveHeroText()" spellcheck="false">Welcome Operator!</h1>
                     <p id="subline">
-                        <span class="sk" id="subline-text" onblur="saveHeroText()" spellcheck="false">Hack the planet. Stay focused.</span>
+                        <span class="sk" id="subline-text" onblur="saveHeroText()" spellcheck="false">Build things. Stay focused.</span>
                     </p>
                 </div>
             </div>
@@ -81,9 +75,7 @@
                 </section>
 
                 <!-- Dynamic & Editable Instant Tools / Cheat-Sheets Bar -->
-                <div id="quick-cmd-bar" class="zen-target" aria-label="Instant Tools">
-                    <!-- JS dynamically renders customizable tool pills + '+ Tool / Cheat' button in Edit Mode -->
-                </div>
+                <div id="quick-cmd-bar" class="zen-target" aria-label="Instant Tools"></div>
 
                 <!-- Live Omni-Suggestions & Command Output Overlay -->
                 <div id="omni-suggestions" role="listbox"></div>
@@ -100,16 +92,10 @@
                 </div>
             </div>
 
-            <!-- Dynamic Editable Dock (Pre-loaded with Default Items + Gmail) -->
+            <!-- Dynamic Editable Dock -->
             <div id="dock-wrap" class="zen-target">
                 <nav id="dock">
                     <ul id="dock-list">
-                        <li class="dynamic-dock" style="--c: var(--violet)"><a href="https://github.com" title="GitHub"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" class="dock-icon" alt="GitHub"></a></li>
-                        <li class="dynamic-dock" style="--c: var(--amber)"><a href="https://leetcode.com" title="LeetCode"><img src="https://www.google.com/s2/favicons?domain=leetcode.com&sz=64" class="dock-icon" alt="LeetCode"></a></li>
-                        <li class="dynamic-dock" style="--c: var(--green)"><a href="https://www.hackerrank.com" title="HackerRank"><img src="https://www.google.com/s2/favicons?domain=www.hackerrank.com&sz=64" class="dock-icon" alt="HackerRank"></a></li>
-                        <li class="dynamic-dock" style="--c: var(--cyan)"><a href="https://chatgpt.com" title="ChatGPT"><img src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=64" class="dock-icon" alt="ChatGPT"></a></li>
-                        <li class="dynamic-dock" style="--c: var(--text)"><a href="https://notion.so" title="Notion"><img src="https://www.google.com/s2/favicons?domain=notion.so&sz=64" class="dock-icon" alt="Notion"></a></li>
-
                         <!-- Fixed Gmail Menu Button at the end -->
                         <li class="fixed-dock">
                             <a href="#" id="gmail-btn" title="Root Mailboxes (⌥M)" onclick="toggleGmailMenu(event)">
@@ -120,17 +106,14 @@
                     </ul>
                 </nav>
 
-                <!-- Gmail Dropdown with Visible Scrollbar -->
+                <!-- Dynamic & Editable Gmail Dropdown -->
                 <div id="gmail-menu" role="menu">
-                    <div class="gm-title">Root Access: Mailboxes</div>
+                    <div class="gm-header-row">
+                        <div class="gm-title">Root Access: Mailboxes</div>
+                        <button type="button" class="gm-add-btn" onclick="openGmailModal()" title="Add New Email Account">+ Email</button>
+                    </div>
                     <div id="gmail-list">
-                        <a href="https://mail.google.com/mail/?authuser=test1@test.com" target="_blank"><span class="gm-badge" style="background: #00897b;">P</span><div class="gm-info"><span>Piyush Sharma(LKO)</span><small>test1@test.com</small></div></a>
-                        <a href="https://mail.google.com/mail/?authuser=test2@gmail.com" target="_blank"><span class="gm-badge" style="background: #607D8B;">P</span><div class="gm-info"><span>Piyush Sharma</span><small>test2@gmail.com</small></div></a>
-                        <a href="https://mail.google.com/mail/?authuser=test3@gmail.com" target="_blank"><span class="gm-badge" style="background: #8e24aa;">P</span><div class="gm-info"><span>Piyush Sharma</span><small>test3@gmail.com</small></div></a>
-                        <a href="https://mail.google.com/mail/?authuser=test4@gmail.com" target="_blank"><span class="gm-badge" style="background: #43a047;">P</span><div class="gm-info"><span>Piyush Sharma</span><small>test4@gmail.com</small></div></a>
-                        <a href="https://mail.google.com/mail/?authuser=test5edu.in" target="_blank"><span class="gm-badge" style="background: #7e57c2;">P</span><div class="gm-info"><span>PIYUSH SHARMA</span><small>test5@gmail.com</small></div></a>
-                        <a href="https://mail.google.com/mail/?authuser=test6@gmail.com" target="_blank"><span class="gm-badge" style="background: #e53935;">K</span><div class="gm-info"><span>khushi Sharma</span><small>test6@gmail.com</small></div></a>
-                        <a href="https://mail.google.com/mail/?authuser=test7@gmail.com" target="_blank"><span class="gm-badge" style="background: #3949ab;">P</span><div class="gm-info"><span>Piyush Sharma</span><small>test7@gmail.com</small></div></a>
+                        <!-- JS dynamically renders editable email accounts here -->
                     </div>
                 </div>
             </div>
@@ -165,37 +148,8 @@
                 </div>
             </section>
 
-            <!-- 4 Bookmarks Sections (Pre-populated & Synced with JS, each with Visible Scrollbar) -->
-            <section id="bookmarks" class="zen-target">
-                <ul>
-                    <li class="col-title"><span>// CS_AND_AI</span></li>
-                    <li class="bm-item"><a href="https://github.com"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=64" class="favicon" alt="">GitHub</a></li>
-                    <li class="bm-item"><a href="https://leetcode.com"><img src="https://www.google.com/s2/favicons?domain=leetcode.com&sz=64" class="favicon" alt="">LeetCode</a></li>
-                    <li class="bm-item"><a href="https://www.hackerrank.com"><img src="https://www.google.com/s2/favicons?domain=www.hackerrank.com&sz=64" class="favicon" alt="">HackerRank</a></li>
-                    <li class="bm-item"><a href="https://www.onlinegdb.com"><img src="https://www.google.com/s2/favicons?domain=www.onlinegdb.com&sz=64" class="favicon" alt="">OnlineGDB</a></li>
-                </ul>
-                <ul>
-                    <li class="col-title"><span>// CYBERSEC</span></li>
-                    <li class="bm-item"><a href="https://www.shodan.io"><img src="https://www.google.com/s2/favicons?domain=www.shodan.io&sz=64" class="favicon" alt="">Shodan</a></li>
-                </ul>
-                <ul>
-                    <li class="col-title"><span>// WEBDEV_&_DOCS</span></li>
-                    <li class="bm-item"><a href="https://www.freecodecamp.org"><img src="https://www.google.com/s2/favicons?domain=www.freecodecamp.org&sz=64" class="favicon" alt="">freeCodeCamp</a></li>
-                    <li class="bm-item"><a href="https://app.pwioi.club/dashboard/student/attendance"><img src="https://www.google.com/s2/favicons?domain=app.pwioi.club&sz=64" class="favicon" alt="">PWIOI Attend</a></li>
-                    <li class="bm-item"><a href="https://docs.google.com/spreadsheets/d/1RnkPP_H7VByIJ49UVulB1dQ2ocnuGD3sH2WtUo8LQ3Y/edit?gid=0#gid=0"><img src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=64" class="favicon" alt="">Track Sheet</a></li>
-                    <li class="bm-item"><a href="https://codebeautify.org/"><img src="https://www.google.com/s2/favicons?domain=codebeautify.org&sz=64" class="favicon" alt="">CodeBeautify</a></li>
-                </ul>
-                <ul>
-                    <li class="col-title"><span>// AI_&_MEDIA</span></li>
-                    <li class="bm-item"><a href="https://chatgpt.com"><img src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=64" class="favicon" alt="">ChatGPT</a></li>
-                    <li class="bm-item"><a href="https://chat.deepseek.com"><img src="https://www.google.com/s2/favicons?domain=chat.deepseek.com&sz=64" class="favicon" alt="">DeepSeek</a></li>
-                    <li class="bm-item"><a href="https://claude.ai"><img src="https://www.google.com/s2/favicons?domain=claude.ai&sz=64" class="favicon" alt="">Claude AI</a></li>
-                    <li class="bm-item"><a href="https://gemini.google.com"><img src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64" class="favicon" alt="">Gemini</a></li>
-                    <li class="bm-item"><a href="https://www.perplexity.ai/"><img src="https://www.google.com/s2/favicons?domain=www.perplexity.ai&sz=64" class="favicon" alt="">Perplexity</a></li>
-                    <li class="bm-item"><a href="https://www.youtube.com/"><img src="https://www.google.com/s2/favicons?domain=www.youtube.com&sz=64" class="favicon" alt="">YouTube</a></li>
-                    <li class="bm-item"><a href="https://web.whatsapp.com/"><img src="https://www.google.com/s2/favicons?domain=web.whatsapp.com&sz=64" class="favicon" alt="">WhatsApp</a></li>
-                </ul>
-            </section>
+            <!-- 4 Bookmarks Sections (Dynamically rendered & editable in GUI) -->
+            <section id="bookmarks" class="zen-target"></section>
         </section>
     </main>
 
@@ -211,7 +165,7 @@
                 <input type="file" id="import-file" accept=".json" style="display:none" onchange="importAllData(event)">
             </div>
         </div>
-        <textarea id="scratchpad" placeholder="Offload your mind here. It saves automatically..."></textarea>
+        <textarea id="scratchpad" placeholder="Offload your mind here. It saves automatically in your browser..."></textarea>
         <div class="sp-footer">
             <div class="sp-pomo-title">7-DAY FOCUS TELEMETRY (🍅 SESSIONS)</div>
             <div id="pomo-chart" class="pomo-chart"></div>
@@ -222,12 +176,12 @@
     <div id="shortcuts-modal" class="modal-overlay">
         <div class="modal-box shortcuts-box">
             <div class="overlay-bar" style="margin-bottom: 0.8rem;">
-                <span style="color:var(--cyan); font-size:0.88rem;">⌨️ MACOS KEYBOARD SHORTCUTS & OMNI COMMANDS (CLICK ANY TO RUN)</span>
+                <span style="color:var(--cyan); font-size:0.88rem;">⌨️ KEYBOARD SHORTCUTS & OMNI COMMANDS (CLICK ANY TO RUN)</span>
                 <button type="button" class="close-pill" onclick="closeShortcutsModal()">Esc ×</button>
             </div>
             <div class="shortcuts-grid">
                 <div class="sc-col">
-                    <h4>⚡ macOS Shortcuts</h4>
+                    <h4>⚡ System Shortcuts</h4>
                     <div class="sc-row" onclick="toggleZenMode(); closeShortcutsModal();"><span>Zen Mode (Hide Clutter)</span><kbd>⌥ + Z</kbd></div>
                     <div class="sc-row" onclick="togglePomodoro(); closeShortcutsModal();"><span>Start/Stop 25m Pomodoro</span><kbd>⌥ + P</kbd></div>
                     <div class="sc-row" onclick="cycleAudio();"><span>Focus Audio (Brown/Pink/40Hz)</span><kbd>⌥ + A</kbd></div>
@@ -235,7 +189,7 @@
                     <div class="sc-row" onclick="toggleGmailMenu(event); closeShortcutsModal();"><span>Open Root Mailboxes</span><kbd>⌥ + M</kbd></div>
                     <div class="sc-row" onclick="toggleScratchpad(); closeShortcutsModal();"><span>Open Brain Dump Pad</span><kbd>⌥ + S</kbd></div>
                     <div class="sc-row" onclick="cycleTheme();"><span>Cycle 10 Calm Themes</span><kbd>⌥ + T</kbd></div>
-                    <div class="sc-row" onclick="toggleEditMode(); closeShortcutsModal();"><span>Edit / Add / Delete Sites & Tools</span><kbd>⌥ + E</kbd></div>
+                    <div class="sc-row" onclick="toggleEditMode(); closeShortcutsModal();"><span>GUI Edit Mode (Edit Everything)</span><kbd>⌥ + E</kbd></div>
                     <div class="sc-row" onclick="closeShortcutsModal(); document.getElementById('q').focus();"><span>Focus Search / Command Bar</span><kbd>/ or ⌘K</kbd></div>
                 </div>
                 <div class="sc-col">
@@ -285,30 +239,48 @@
         </div>
     </div>
 
-    <!-- Modal for adding Bookmarks -->
+    <!-- Modal for Adding / Editing Bookmarks -->
     <div id="site-modal" class="modal-overlay">
         <div class="modal-box">
-            <div class="modal-title">ADD NEW TARGET_NODE</div>
-            <input type="text" id="modal-site-name" placeholder="Site Name (e.g., GitHub)" autocomplete="off">
-            <input type="url" id="modal-site-url" placeholder="URL (e.g., https://github.com)" autocomplete="off">
+            <div class="modal-title" id="site-modal-title">ADD / EDIT TARGET_NODE</div>
+            <input type="text" id="modal-site-name" placeholder="Site Name (e.g., Test Site)" autocomplete="off">
+            <input type="url" id="modal-site-url" placeholder="URL (e.g., https://test.com)" autocomplete="off">
             <input type="hidden" id="modal-section-idx">
+            <input type="hidden" id="modal-link-idx" value="">
             <div class="modal-btns">
                 <button type="button" onclick="closeSiteModal()">Cancel</button>
-                <button type="button" class="primary" onclick="saveNewSite()">Add Target</button>
+                <button type="button" class="primary" onclick="saveNewSite()">Save Target</button>
             </div>
         </div>
     </div>
     
-    <!-- Modal for adding Dock Items -->
+    <!-- Modal for Adding / Editing Dock Items -->
     <div id="dock-modal" class="modal-overlay">
         <div class="modal-box">
-            <div class="modal-title">ADD DOCK APP</div>
-            <input type="text" id="dock-site-name" placeholder="App Name (e.g., Notion)" autocomplete="off">
-            <input type="url" id="dock-site-url" placeholder="URL (e.g., https://notion.so)" autocomplete="off">
+            <div class="modal-title" id="dock-modal-title">ADD / EDIT DOCK APP</div>
+            <input type="hidden" id="dock-edit-idx" value="">
+            <input type="text" id="dock-site-name" placeholder="App Name (e.g., Test App)" autocomplete="off">
+            <input type="url" id="dock-site-url" placeholder="URL (e.g., https://test.com)" autocomplete="off">
             <input type="text" id="dock-site-color" placeholder="Color Hex (e.g., #3fd9e8) - Optional" autocomplete="off">
             <div class="modal-btns">
                 <button type="button" onclick="closeDockModal()">Cancel</button>
-                <button type="button" class="primary" onclick="saveDockSite()">Add App</button>
+                <button type="button" class="primary" onclick="saveDockSite()">Save App</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding / Editing Gmail / Email Accounts -->
+    <div id="gmail-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-title" id="gmail-modal-title">ADD / EDIT EMAIL ACCOUNT</div>
+            <input type="hidden" id="gmail-edit-idx" value="">
+            <input type="text" id="gmail-name-input" placeholder="Display Name (e.g., Work Mail)" autocomplete="off">
+            <input type="email" id="gmail-email-input" placeholder="Email ID (e.g., user1@test.com)" autocomplete="off">
+            <input type="text" id="gmail-color-input" placeholder="Badge Color (e.g., #00897b) - Optional" autocomplete="off">
+            <input type="url" id="gmail-url-input" placeholder="Custom URL (Optional - defaults to Gmail)" autocomplete="off">
+            <div class="modal-btns">
+                <button type="button" onclick="closeGmailModal()">Cancel</button>
+                <button type="button" class="primary" onclick="saveGmailAccount()">Save Email</button>
             </div>
         </div>
     </div>
@@ -322,10 +294,10 @@
         <button type="button" onclick="togglePomodoro()" title="Start/Stop 25m Focus Timer">⏱ Pomo <kbd data-k="P">⌥P</kbd></button>
         <button type="button" onclick="cycleAudio()" title="Cycle Brown Noise / Pink Rain / 40Hz Gamma">🎧 Sound <kbd data-k="A">⌥A</kbd></button>
         <button type="button" onclick="toggleBreathing()" title="Start 4-4-4-4 Box Breathing">🌬️ Breathe <kbd data-k="B">⌥B</kbd></button>
-        <button type="button" onclick="toggleGmailMenu(event)" title="Open All 7 Gmail Accounts">✉️ Gmail <kbd data-k="M">⌥M</kbd></button>
+        <button type="button" onclick="toggleGmailMenu(event)" title="Open Mailboxes">✉️ Mail <kbd data-k="M">⌥M</kbd></button>
         <button type="button" onclick="toggleScratchpad()" title="Open Brain Dump & Stats">📝 Pad <kbd data-k="S">⌥S</kbd></button>
         <button type="button" onclick="cycleTheme()" title="Switch Calm Theme (⌥T)">🎨 Theme: <kbd id="theme-name">Agni</kbd> <kbd data-k="T">⌥T</kbd></button>
-        <button type="button" onclick="toggleEditMode()" title="Add/Delete/Drag Sites & Tools (⌥E)">✏️ Edit <kbd data-k="E">⌥E</kbd></button>
+        <button type="button" onclick="toggleEditMode()" title="Customize Everything in GUI (⌥E)">✏️ Edit <kbd data-k="E">⌥E</kbd></button>
         <button type="button" onclick="toggleShortcutsModal()" title="See All Shortcuts & Commands (⌥K)">⌨️ All Keys <kbd data-k="K">⌥K</kbd></button>
     </div>
 </body>
