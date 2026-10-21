@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "version": "1.0",
-  "name": "P1YUSH theme",
-  "description": "Custom P1YUSH Theme for Brave",
+  "name": "WarMode Theme",
+  "description": "Custom WarMode Startpage Theme",
   "theme": {
     "colors": {
       "frame": [26, 27, 38],
