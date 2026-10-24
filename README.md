@@ -146,17 +146,17 @@ A heartfelt thanks to the minds shaping the **WarMode** ecosystem:
 <tr>
 <td align="center">
 <br>
-<a href="https://github.com/piyush-security">
-<img src="https://avatars.githubusercontent.com/piyush-security?v=4&s=110" width="110" height="110" alt="Piyush Sharma" />
+<a href="https://github.com/piyush-sharma-ai">
+<img src="https://avatars.githubusercontent.com/piyush-sharma-ai?v=4&s=110" width="110" height="110" alt="Piyush Sharma" />
 </a>
 <br><br>
-<b><a href="https://github.com/piyush-security">Piyush Sharma</a></b>
+<b><a href="https://github.com/piyush-sharma-ai">Piyush Sharma</a></b>
 <br>
-<sub><code>@piyush-security</code></sub>
+<sub><code>@piyush-sharma-ai</code></sub>
 <br><br>
 <sub>Core Engine, OffSec CLI Suite,<br>Dynamic Dock &amp; WebAudio Synth</sub>
 <br><br>
-<a href="https://github.com/piyush-security">
+<a href="https://github.com/piyush-sharma-ai">
 <img src="https://img.shields.io/badge/GitHub-Profile-181717?style=for-the-badge&logo=github&logoColor=3fd9e8" alt="Piyush GitHub" />
 </a>
 <br><br>
